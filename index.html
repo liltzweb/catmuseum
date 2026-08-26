@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>catmuseum ‧ order form</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=JetBrains+Mono:wght@400;500;600&family=Karla:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFFBF0;
+    --ink:#4B4B49;
+    --stone:#6C6C6A;
+    --rose:#E8CCD7;
+    --rose-deep:#C98CA3;
+    --powder:#DEE5ED;
+    --powder-deep:#A9BDD3;
+    --paper:#FFFFFF;
+    --line: rgba(108,108,106,0.22);
+    --radius: 14px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(232,204,215,0.35), transparent 40%),
+      radial-gradient(circle at 90% 15%, rgba(222,229,237,0.45), transparent 45%),
+      var(--cream);
+    color:var(--ink);
+    font-family:'Karla', sans-serif;
+    line-height:1.5;
+    padding-bottom:140px;
+  }
+  a{color:inherit;}
+
+  /* ---------- ticket header ---------- */
+  .ticket{
+    max-width:640px;
+    margin:36px auto 8px;
+    padding:0 20px;
+  }
+  .ticket-inner{
+    background:var(--paper);
+    border-radius:var(--radius);
+    box-shadow:0 1px 2px rgba(75,75,73,0.06), 0 10px 30px rgba(75,75,73,0.07);
+    padding:34px 30px 26px;
+    position:relative;
+    overflow:hidden;
+    border:1px solid var(--line);
+  }
+  .ticket-inner::before{
+    content:"";
+    position:absolute; inset:0;
+    background:repeating-linear-gradient(90deg, transparent 0 6px, rgba(108,108,106,0.05) 6px 7px);
+    opacity:.5;
+    pointer-events:none;
+  }
+  .stub-row{display:flex; justify-content:space-between; align-items:flex-start; gap:16px;}
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--rose-deep);
+    margin:0 0 6px;
+  }
+  h1.title{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:32px;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  h1.title em{font-style:italic; color:var(--rose-deep); font-weight:500;}
+  .subtitle{
+    margin:10px 0 0;
+    font-size:14.5px;
+    color:var(--stone);
+    max-width:38ch;
+  }
+  .price-tag{
+    text-align:right;
+    font-family:'JetBrains Mono', monospace;
+    flex-shrink:0;
+  }
+  .price-tag .label{font-size:10px; letter-spacing:.1em; text-transform:uppercase; color:var(--stone);}
+  .price-tag .amount{font-size:22px; font-weight:600; color:var(--ink);}
+  .perforation{
+    height:0;
+    border-top:2px dashed rgba(108,108,106,0.3);
+    margin:24px -30px 0;
+    position:relative;
+  }
+  .perforation::before,.perforation::after{
+    content:"";
+    position:absolute; top:-9px;
+    width:18px; height:18px; border-radius:50%;
+    background:var(--cream);
+  }
+  .perforation::before{left:-9px;}
+  .perforation::after{right:-9px;}
+
+  /* ---------- layout ---------- */
+  .wrap{max-width:640px; margin:0 auto; padding:0 20px;}
+  .exhibit{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    margin-top:18px;
+    overflow:hidden;
+  }
+  .exhibit-head{
+    display:flex; align-items:baseline; gap:12px;
+    padding:18px 24px 14px;
+    border-bottom:1px solid var(--line);
+    background:linear-gradient(180deg, rgba(232,204,215,0.28), transparent);
+  }
+  .exhibit-num{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--rose-deep);
+    background:var(--rose);
+    padding:3px 8px;
+    border-radius:20px;
+    letter-spacing:.05em;
+  }
+  .exhibit-title{
+    font-family:'Fraunces', serif;
+    font-size:19px;
+    font-weight:500;
+    margin:0;
+  }
+  .exhibit-note{
+    font-size:12.5px;
+    color:var(--stone);
+    margin:2px 0 0 auto;
+    text-align:right;
+    font-style:italic;
+  }
+  .exhibit-body{padding:20px 24px 24px; display:grid; gap:16px;}
+
+  .field{display:grid; gap:6px;}
+  .field label{
+    font-family:'JetBrains Mono', monospace;
+    font-size:11.5px;
+    letter-spacing:.04em;
+    color:var(--stone);
+  }
+  .field label .req{color:var(--rose-deep);}
+  .field input[type=text],
+  .field input[type=date],
+  .field input[type=time],
+  .field textarea{
+    font-family:'Karla', sans-serif;
+    font-size:14.5px;
+    padding:10px 12px;
+    border-radius:9px;
+    border:1px solid var(--line);
+    background:var(--cream);
+    color:var(--ink);
+    width:100%;
+    resize:vertical;
+  }
+  .field input:focus, .field textarea:focus{
+    outline:2px solid var(--powder-deep);
+    outline-offset:1px;
+    background:var(--paper);
+  }
+  .field textarea{min-height:44px;}
+  .field .default-hint{font-size:11.5px; color:var(--stone); opacity:.75;}
+
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media(max-width:520px){.row2{grid-template-columns:1fr;}}
+
+  .radio-group{display:flex; gap:10px;}
+  .radio-pill{
+    flex:1;
+    text-align:center;
+    padding:9px 10px;
+    border-radius:9px;
+    border:1px solid var(--line);
+    cursor:pointer;
+    font-size:13.5px;
+    background:var(--cream);
+    transition:background .15s, border-color .15s;
+  }
+  .radio-pill input{display:none;}
+  .radio-pill.active{
+    background:var(--rose);
+    border-color:var(--rose-deep);
+    font-weight:600;
+  }
+
+  .swatches{display:flex; gap:8px; flex-wrap:wrap;}
+  .swatch{
+    display:flex; align-items:center; gap:6px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    background:var(--cream);
+    border:1px solid var(--line);
+    padding:5px 9px 5px 5px;
+    border-radius:20px;
+  }
+  .swatch i{width:16px; height:16px; border-radius:50%; display:inline-block; border:1px solid rgba(0,0,0,0.08);}
+  .palette-inputs{display:none; gap:8px; flex-wrap:wrap;}
+  .palette-inputs.show{display:flex;}
+  .palette-inputs input[type=color]{
+    width:38px; height:38px; padding:0; border:1px solid var(--line); border-radius:9px; background:none; cursor:pointer;
+  }
+
+  .checkbox-line{
+    display:flex; align-items:center; gap:9px;
+    font-size:13.5px;
+    background:var(--powder);
+    padding:10px 12px;
+    border-radius:9px;
+  }
+  .checkbox-line input{width:16px; height:16px; accent-color:var(--rose-deep);}
+
+  .filefield{
+    border:1px dashed var(--powder-deep);
+    border-radius:9px;
+    padding:14px 12px;
+    background:var(--cream);
+    font-size:13px;
+  }
+  .filefield input{margin-top:8px; font-size:12.5px; width:100%;}
+
+  .link-suffix{
+    display:flex; align-items:center;
+    border:1px solid var(--line); border-radius:9px; overflow:hidden; background:var(--cream);
+  }
+  .link-suffix input{border:none; background:transparent; flex:1; padding:10px 12px; font-size:14.5px; font-family:'Karla',sans-serif;}
+  .link-suffix span{padding:0 12px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--stone); border-left:1px solid var(--line); align-self:stretch; display:flex; align-items:center; background:var(--powder);}
+
+  /* ---------- generate / footer ---------- */
+  .generate-block{
+    margin-top:22px;
+    text-align:center;
+  }
+  .btn{
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    letter-spacing:.04em;
+    padding:14px 26px;
+    border-radius:30px;
+    border:1px solid var(--ink);
+    background:var(--ink);
+    color:var(--cream);
+    cursor:pointer;
+    transition:transform .15s, opacity .15s;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn:active{transform:translateY(0);}
+  .btn.secondary{background:transparent; color:var(--ink); border-color:var(--stone);}
+
+  .output-card{
+    display:none;
+    margin-top:20px;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px;
+  }
+  .output-card.show{display:block;}
+  .output-card h3{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    font-size:17px;
+    margin:0 0 10px;
+  }
+  .output-card pre{
+    white-space:pre-wrap;
+    word-break:break-word;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12.2px;
+    line-height:1.65;
+    background:var(--cream);
+    border:1px solid var(--line);
+    border-radius:9px;
+    padding:16px;
+    max-height:340px;
+    overflow-y:auto;
+  }
+  .output-actions{display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;}
+  .output-actions .btn{flex:1; min-width:150px;}
+  .copied-msg{
+    font-size:12.5px; color:var(--rose-deep); margin-top:8px; display:none; font-weight:700;
+  }
+
+  footer.paw{
+    text-align:center;
+    font-size:12px;
+    color:var(--stone);
+    margin-top:40px;
+    font-family:'JetBrains Mono', monospace;
+    letter-spacing:.06em;
+  }
+</style>
+</head>
+<body>
+
+<div class="ticket">
+  <div class="ticket-inner">
+    <div class="stub-row">
+      <div>
+        <p class="eyebrow">admit one ‧ custom order</p>
+        <h1 class="title">catmuseum <em>form</em> ♡</h1>
+        <p class="subtitle">isi form di bawah untuk pesan website birthday exhibit kamu. semua kolom yang bertuliskan "→ replace" boleh diganti sesuka hati, atau dibiarkan kosong untuk pakai teks default.</p>
+      </div>
+      <div class="price-tag">
+        <div class="label">total</div>
+        <div class="amount" id="priceOut">Rp12.000</div>
+      </div>
+    </div>
+    <div class="perforation"></div>
+  </div>
+</div>
+
+<div class="wrap" id="formRoot"></div>
+
+<div class="wrap generate-block">
+  <button class="btn" id="generateBtn">kirim pesanan ♡</button>
+  <div class="output-card" id="outputCard">
+    <h3>form kamu</h3>
+    <pre id="outputText"></pre>
+    <div id="sendProgress" style="margin-top:10px;">
+      <div style="height:6px; background:var(--powder); border-radius:4px; overflow:hidden;">
+        <div id="sendBar" style="height:100%; width:0%; background:var(--rose-deep); transition:width .25s;"></div>
+      </div>
+      <p id="sendStatus" style="font-size:12px; color:var(--stone); margin:6px 0 0;"></p>
+    </div>
+    <p class="copied-msg" id="copiedMsg"></p>
+  </div>
+</div>
+
+<footer class="paw">𓏲 ‧ thank you for visiting the museum ‧ 𓏲</footer>
+
+<script>
+const DEFAULT_PALETTE = ['#6C6C6A','#E8CCD7','#DEE5ED','#FFFBF0'];
+
+// section config: generic sections rendered from field lists
+const SECTIONS = [
+  { id:'03', title:'opening museum', fields:[
+    {key:'open_title', label:'opening title', def:"welcome to cattia's birthday exhibit."},
+    {key:'open_subtitle', label:'opening subtitle', def:'a private collage of moments...'},
+    {key:'enter_btn', label:'enter button', def:'enter the museum'},
+  ]},
+  { id:'04', title:'museum lobby', fields:[
+    {key:'lobby_section', label:'section title', def:'birthday museum lobby'},
+    {key:'lobby_headline', label:'lobby headline', def:'And when you go away...'},
+    {key:'archive_name', label:'archive name', def:'cattia.zip'},
+    {key:'archive_item', label:'archive item', def:'strawberry cake'},
+    {key:'ticket_label', label:'ticket label', def:'admit one birthday archive'},
+    {key:'lovefile_label', label:'love file label', def:'love file'},
+    {key:'saved_label', label:'saved label', def:'saved'},
+  ]},
+  { id:'05', title:'visitor guide', fields:[
+    {key:'guide_section', label:'section title', def:'visitor guide'},
+    {key:'guide_name', label:'name label', def:'name'},
+    {key:'guide_bday', label:'birthday label', def:'birthday'},
+    {key:'guide_from', label:'from label', def:'from'},
+  ]},
+  { id:'06', title:'room 01', fields:[
+    {key:'r1_title', label:'room title', def:'first impression'},
+    {key:'r1_subtitle', label:'room subtitle', def:'why her?'},
+    {key:'r1_exhibit', label:'exhibit label', def:'exhibit 01'},
+    {key:'r1_text', label:'first impression text', def:'meeting you for the first time...'},
+  ]},
+  { id:'07', title:'room 02 ‧ tiny habits archive', fields:[
+    {key:'r2_title', label:'room title', def:'tiny habits archive'},
+    {key:'r2_h1', label:'tiny habit 01', def:'the way you laugh...'},
+    {key:'r2_h2', label:'tiny habit 02', def:'your random sleepy voice'},
+    {key:'r2_h3', label:'tiny habit 03', def:'how you make ordinary days...'},
+    {key:'r2_h4', label:'tiny habit 04', def:'the little pause...'},
+    {key:'r2_h5', label:'tiny habit 05', def:'your face when you are trying...'},
+    {key:'r2_h6', label:'tiny habit 06', def:'the way your presence...'},
+  ]},
+  { id:'09', title:'room 04', fields:[
+    {key:'r4_title', label:'room title', def:'things i never said enough'},
+    {key:'r4_m1', label:'message 01', def:'you are easier to love...'},
+    {key:'r4_m2', label:'message 02', def:'thank you for existing...'},
+    {key:'r4_m3', label:'message 03', def:'you make my world...'},
+    {key:'r4_m4', label:'message 04', def:'your kindness stays...'},
+    {key:'r4_m5', label:'message 05', def:'you are a beautiful reason...'},
+  ]},
+  { id:'10', title:'room 05 ‧ birthday forecast', fields:[
+    {key:'r5_title', label:'room title', def:'birthday forecast'},
+    {key:'r5_subtitle', label:'forecast subtitle', def:'for the newest chapter'},
+    {key:'r5_playlist', label:'playlist label', def:'playlist reveal'},
+    {key:'r5_playlist_sub', label:'playlist subtitle', def:'side a / cattia'},
+    {key:'r5_f1', label:'forecast 01', def:'more laugh'},
+    {key:'r5_f2', label:'forecast 02', def:'more luck'},
+    {key:'r5_f3', label:'forecast 03', def:'more love'},
+    {key:'r5_f4', label:'forecast 04', def:'more peaceful days'},
+    {key:'r5_f5', label:'forecast 05', def:'more reasons to smile'},
+  ]},
+  { id:'11', title:'final room', fields:[
+    {key:'final_title', label:'room title', def:'letter reveal'},
+    {key:'final_envelope', label:'envelope text', def:'for you'},
+    {key:'final_button', label:'button text', def:'open the final letter'},
+    {key:'final_letter', label:'birthday letter', def:'happy birthday ♡ i hope this new age...', long:true},
+    {key:'final_wish_btn', label:'wish button', def:'claim your birthday wish'},
+    {key:'final_claimed', label:'claimed text', def:'wish claimed. may this year...'},
+  ]},
+];
+
+const root = document.getElementById('formRoot');
+
+function el(html){ const d=document.createElement('div'); d.innerHTML=html.trim(); return d.firstElementChild; }
+
+function fieldRow(f){
+  const tag = f.long ? 'textarea' : 'input type="text"';
+  const closeTag = f.long ? 'textarea' : 'input';
+  return `
+  <div class="field">
+    <label for="${f.key}">${f.label}</label>
+    <${tag} id="${f.key}" data-key="${f.key}" placeholder="${f.def.replace(/"/g,'&quot;')}">${f.long?f.def:''}</${closeTag==='textarea'?'textarea':''}>
+    ${f.long?'':`<span class="default-hint">default: ${f.def}</span>`}
+  </div>`;
+}
+
+// ---------- 00 customer identity ----------
+root.appendChild(el(`
+<section class="exhibit">
+  <div class="exhibit-head">
+    <span class="exhibit-num">00</span>
+    <h2 class="exhibit-title">customer identity</h2>
+  </div>
+  <div class="exhibit-body">
+    <div class="row2">
+      <div class="field"><label>name <span class="req">*</span></label><input type="text" id="cust_name" data-key="cust_name" placeholder="nama kamu"></div>
+      <div class="field"><label>username <span class="req">*</span></label><input type="text" id="cust_username" data-key="cust_username" placeholder="@username"></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label>payment</label><input type="text" value="qris no rate" disabled></div>
+      <div class="field"><label>deadline <span class="req">*</span></label><input type="date" id="deadline" data-key="deadline"></div>
+    </div>
+    <label class="checkbox-line">
+      <input type="checkbox" id="rush">
+      deadline 24 jam setelah payment (+4.000)
+    </label>
+  </div>
+</section>`));
+
+// ---------- 01 custom color palette ----------
+root.appendChild(el(`
+<section class="exhibit">
+  <div class="exhibit-head">
+    <span class="exhibit-num">01</span>
+    <h2 class="exhibit-title">custom color palette</h2>
+    <p class="exhibit-note">recolor +2.000</p>
+  </div>
+  <div class="exhibit-body">
+    <div class="field">
+      <label>recolor</label>
+      <div class="radio-group">
+        <label class="radio-pill" id="pillNo"><input type="radio" name="recolor" value="no" checked>no</label>
+        <label class="radio-pill" id="pillYes"><input type="radio" name="recolor" value="yes">yes</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>default palette</label>
+      <div class="swatches" id="defaultSwatches"></div>
+    </div>
+    <div class="field">
+      <label>new palette</label>
+      <div class="palette-inputs" id="paletteInputs">
+        <input type="color" value="#6C6C6A" data-idx="0">
+        <input type="color" value="#E8CCD7" data-idx="1">
+        <input type="color" value="#DEE5ED" data-idx="2">
+        <input type="color" value="#FFFBF0" data-idx="3">
+      </div>
+    </div>
+  </div>
+</section>`));
+
+const swatchWrap = document.getElementById('defaultSwatches');
+DEFAULT_PALETTE.forEach(hex=>{
+  swatchWrap.appendChild(el(`<span class="swatch"><i style="background:${hex}"></i>${hex}</span>`));
+});
+document.querySelectorAll('input[name=recolor]').forEach(r=>{
+  r.addEventListener('change', ()=>{
+    document.getElementById('pillYes').classList.toggle('active', r.value==='yes' && r.checked);
+    document.getElementById('pillNo').classList.toggle('active', r.value==='no' && r.checked);
+    document.getElementById('paletteInputs').classList.toggle('show', document.querySelector('input[name=recolor]:checked').value==='yes');
+    updatePrice();
+  });
+});
+document.getElementById('pillNo').classList.add('active');
+
+// ---------- 02 birthday identity ----------
+root.appendChild(el(`
+<section class="exhibit">
+  <div class="exhibit-head">
+    <span class="exhibit-num">02</span>
+    <h2 class="exhibit-title">birthday identity</h2>
+  </div>
+  <div class="exhibit-body">
+    <div class="row2">
+      <div class="field"><label>name <span class="req">*</span></label><input type="text" id="bday_name" data-key="bday_name" placeholder="nama yang berulang tahun"></div>
+      <div class="field"><label>birthday date <span class="req">*</span></label><input type="date" id="bday_date" data-key="bday_date"></div>
+    </div>
+    <div class="field"><label>sender name <span class="req">*</span></label><input type="text" id="sender_name" data-key="sender_name" placeholder="nama kamu / pengirim"></div>
+  </div>
+</section>`));
+
+// ---------- render generic sections 03,04,05,06,07 ----------
+SECTIONS.filter(s=>['03','04','05','06','07'].includes(s.id)).forEach(s=>{
+  const body = s.fields.map(fieldRow).join('');
+  root.appendChild(el(`
+  <section class="exhibit">
+    <div class="exhibit-head">
+      <span class="exhibit-num">${s.id}</span>
+      <h2 class="exhibit-title">${s.title}</h2>
+    </div>
+    <div class="exhibit-body">${body}</div>
+  </section>`));
+});
+
+// ---------- 08 room 03 memory wall (with photo upload) ----------
+const memFields = [
+  {key:'r3_title', label:'room title', def:'memory wall'},
+  {key:'r3_side', label:'side text', def:'my girl'},
+  {key:'r3_m1', label:'memory 01', def:'a frame from a day...'},
+  {key:'r3_m2', label:'memory 02', def:'this tiny moment...'},
+  {key:'r3_m3', label:'memory 03', def:'proof that simple days...'},
+  {key:'r3_m4', label:'memory 04', def:'one of my favorite...'},
+  {key:'r3_m5', label:'memory 05', def:'a memory with soft edges'},
+  {key:'r3_m6', label:'memory 06', def:'kept here because it matters'},
+  {key:'r3_label', label:'small label', def:'memory file'},
+];
+root.appendChild(el(`
+<section class="exhibit">
+  <div class="exhibit-head">
+    <span class="exhibit-num">08</span>
+    <h2 class="exhibit-title">room 03 ‧ memory wall</h2>
+  </div>
+  <div class="exhibit-body">
+    <div class="filefield">
+      kirim 6 foto untuk memory wall <span class="req">*</span>
+      <input type="file" id="memoryPhotos" accept="image/*" multiple>
+    </div>
+    ${memFields.map(fieldRow).join('')}
+  </div>
+</section>`));
+
+// ---------- render 09, 10, 11 ----------
+SECTIONS.filter(s=>['09','10','11'].includes(s.id)).forEach(s=>{
+  const body = s.fields.map(fieldRow).join('');
+  root.appendChild(el(`
+  <section class="exhibit">
+    <div class="exhibit-head">
+      <span class="exhibit-num">${s.id}</span>
+      <h2 class="exhibit-title">${s.title}</h2>
+    </div>
+    <div class="exhibit-body">${body}</div>
+  </section>`));
+});
+
+// ---------- 12 background music ----------
+root.appendChild(el(`
+<section class="exhibit">
+  <div class="exhibit-head">
+    <span class="exhibit-num">12</span>
+    <h2 class="exhibit-title">background music</h2>
+  </div>
+  <div class="exhibit-body">
+    <div class="filefield">
+      kirim 1 lagu format .mp3 <span class="req">*</span>
+      <input type="file" id="songFile" accept="audio/mpeg,.mp3">
+    </div>
+  </div>
+</section>`));
+
+// ---------- 13 link ----------
+root.appendChild(el(`
+<section class="exhibit">
+  <div class="exhibit-head">
+    <span class="exhibit-num">13</span>
+    <h2 class="exhibit-title">link</h2>
+    <p class="exhibit-note">2 opsi wajib diisi</p>
+  </div>
+  <div class="exhibit-body">
+    <div class="field">
+      <label>website title</label>
+      <input type="text" id="website_title" data-key="website_title" placeholder="cattia's birthday exhibit">
+    </div>
+    <div class="field">
+      <label>custom link option 01 <span class="req">*</span></label>
+      <div class="link-suffix"><input type="text" id="link1" placeholder="nama"><span>.netlify.app</span></div>
+    </div>
+    <div class="field">
+      <label>custom link option 02 <span class="req">*</span></label>
+      <div class="link-suffix"><input type="text" id="link2" placeholder="nama"><span>.netlify.app</span></div>
+    </div>
+    <p class="default-hint">note: link seperti catmuseum.netlify.app hanya bisa dipakai oleh satu website, jadi kasih 2 opsi ya!</p>
+  </div>
+</section>`));
+
+// ---------- price ----------
+function updatePrice(){
+  let total = 12000;
+  if(document.querySelector('input[name=recolor]:checked').value==='yes') total += 2000;
+  if(document.getElementById('rush').checked) total += 4000;
+  document.getElementById('priceOut').textContent = 'Rp' + total.toLocaleString('id-ID');
+}
+document.getElementById('rush').addEventListener('change', updatePrice);
+updatePrice();
+
+// ---------- generate summary ----------
+function val(id, fallback){
+  const e = document.getElementById(id);
+  if(!e) return fallback||'';
+  const v = e.value.trim();
+  return v ? v : (fallback||'');
+}
+function fval(key, def){
+  const e = document.querySelector(`[data-key="${key}"]`);
+  const v = e ? e.value.trim() : '';
+  return v ? v : def;
+}
+
+function buildSummaryText(){
+  const recolor = document.querySelector('input[name=recolor]:checked').value;
+  const rush = document.getElementById('rush').checked;
+  let newPaletteLine = '';
+  if(recolor==='yes'){
+    const hexes = Array.from(document.querySelectorAll('#paletteInputs input')).map(i=>i.value);
+    newPaletteLine = hexes.join(', ');
+  }
+  const lines = [];
+  lines.push('𓏲 catmuseum form ♡');
+  lines.push('website price : ' + document.getElementById('priceOut').textContent);
+  lines.push('');
+  lines.push('𝟶𝟶 ୵ customer identity.');
+  lines.push('name : ' + val('cust_name'));
+  lines.push('username : ' + val('cust_username'));
+  lines.push('payment : qris no rate.');
+  lines.push('deadline : ' + val('deadline') + (rush ? ' (rush, +4.000)' : ''));
+  lines.push('');
+  lines.push('𝟶𝟷 ୵ custom color palette.');
+  lines.push('recolor : ' + recolor);
+  lines.push('default palette : #6C6C6A, #E8CCD7, #DEE5ED, #FFFBF0');
+  lines.push('new palette : ' + newPaletteLine);
+  lines.push('');
+  lines.push('𝟶𝟸 ୵ birthday identity.');
+  lines.push('name : ' + val('bday_name'));
+  lines.push('birthday date : ' + val('bday_date'));
+  lines.push('sender name : ' + val('sender_name'));
+  lines.push('');
+  lines.push('𝟶𝟹 ୵ opening museum.');
+  lines.push('opening title → ' + fval('open_title','welcome to cattia\'s birthday exhibit.'));
+  lines.push('opening subtitle → ' + fval('open_subtitle','a private collage of moments...'));
+  lines.push('enter button → ' + fval('enter_btn','enter the museum'));
+  lines.push('');
+  lines.push('𝟶𝟺 ୵ museum lobby.');
+  lines.push('section title → ' + fval('lobby_section','birthday museum lobby'));
+  lines.push('lobby headline → ' + fval('lobby_headline','And when you go away...'));
+  lines.push('archive name → ' + fval('archive_name','cattia.zip'));
+  lines.push('archive item → ' + fval('archive_item','strawberry cake'));
+  lines.push('ticket label → ' + fval('ticket_label','admit one birthday archive'));
+  lines.push('love file label → ' + fval('lovefile_label','love file'));
+  lines.push('saved label → ' + fval('saved_label','saved'));
+  lines.push('');
+  lines.push('𝟶𝟻 ୵ visitor guide.');
+  lines.push('section title → ' + fval('guide_section','visitor guide'));
+  lines.push('name label → ' + fval('guide_name','name'));
+  lines.push('birthday label → ' + fval('guide_bday','birthday'));
+  lines.push('from label → ' + fval('guide_from','from'));
+  lines.push('');
+  lines.push('𝟶𝟼 ୵ room 01.');
+  lines.push('room title → ' + fval('r1_title','first impression'));
+  lines.push('room subtitle → ' + fval('r1_subtitle','why her?'));
+  lines.push('exhibit label → ' + fval('r1_exhibit','exhibit 01'));
+  lines.push('first impression text → ' + fval('r1_text','meeting you for the first time...'));
+  lines.push('');
+  lines.push('𝟶𝟽 ୵ room 02.');
+  lines.push('room title → ' + fval('r2_title','tiny habits archive'));
+  for(let i=1;i<=6;i++) lines.push(`tiny habit 0${i} → ` + fval('r2_h'+i, ''));
+  lines.push('');
+  lines.push('𝟶𝟾 ୵ room 03. (6 foto dilampirkan terpisah)');
+  lines.push('room title → ' + fval('r3_title','memory wall'));
+  lines.push('side text → ' + fval('r3_side','my girl'));
+  for(let i=1;i<=6;i++) lines.push(`memory 0${i} → ` + fval('r3_m'+i, ''));
+  lines.push('small label → ' + fval('r3_label','memory file'));
+  lines.push('');
+  lines.push('𝟶𝟿 ୵ room 04.');
+  lines.push('room title → ' + fval('r4_title','things i never said enough'));
+  for(let i=1;i<=5;i++) lines.push(`message 0${i} → ` + fval('r4_m'+i, ''));
+  lines.push('');
+  lines.push('𝟷𝟶 ୵ room 05.');
+  lines.push('room title → ' + fval('r5_title','birthday forecast'));
+  lines.push('forecast subtitle → ' + fval('r5_subtitle','for the newest chapter'));
+  lines.push('playlist label → ' + fval('r5_playlist','playlist reveal'));
+  lines.push('playlist subtitle → ' + fval('r5_playlist_sub','side a / cattia'));
+  for(let i=1;i<=5;i++) lines.push(`forecast 0${i} → ` + fval('r5_f'+i, ''));
+  lines.push('');
+  lines.push('𝟷𝟷 ୵ final room.');
+  lines.push('room title → ' + fval('final_title','letter reveal'));
+  lines.push('envelope text → ' + fval('final_envelope','for you'));
+  lines.push('button text → ' + fval('final_button','open the final letter'));
+  lines.push('birthday letter → ' + fval('final_letter','happy birthday ♡ i hope this new age...'));
+  lines.push('wish button → ' + fval('final_wish_btn','claim your birthday wish'));
+  lines.push('claimed text → ' + fval('final_claimed','wish claimed. may this year...'));
+  lines.push('');
+  lines.push('𝟷𝟸 ୵ background music. (lagu .mp3 dilampirkan terpisah)');
+  lines.push('');
+  lines.push('𝟷𝟹 ୵ link.');
+  lines.push('website title → ' + fval('website_title', "cattia's birthday exhibit"));
+  lines.push('link option 01 : ' + (val('link1') || '(nama)') + '.netlify.app');
+  lines.push('link option 02 : ' + (val('link2') || '(nama)') + '.netlify.app');
+
+  return lines.join('\n');
+}
+
+// ---------- kirim ke Cloudflare Worker -> Telegram ----------
+// GANTI baris di bawah ini dengan URL worker kamu setelah deploy, contoh:
+// const WORKER_URL = 'https://catmuseum-relay.namakamu.workers.dev';
+const WORKER_URL = 'PASTE_WORKER_URL_DI_SINI';
+
+async function sendSummary(text){
+  const fd = new FormData();
+  fd.append('kind', 'summary');
+  fd.append('text', text);
+  const res = await fetch(WORKER_URL, { method:'POST', body: fd });
+  if(!res.ok) throw new Error(await res.text());
+}
+
+async function sendFile(file, label){
+  const fd = new FormData();
+  fd.append('kind', 'file');
+  fd.append('label', label);
+  fd.append('file', file, file.name);
+  const res = await fetch(WORKER_URL, { method:'POST', body: fd });
+  if(!res.ok) throw new Error(await res.text());
+}
+
+document.getElementById('generateBtn').addEventListener('click', async ()=>{
+  const btn = document.getElementById('generateBtn');
+  const outputCard = document.getElementById('outputCard');
+  const outputText = document.getElementById('outputText');
+  const progress = document.getElementById('sendProgress');
+  const bar = document.getElementById('sendBar');
+  const status = document.getElementById('sendStatus');
+  const msg = document.getElementById('copiedMsg');
+
+  const text = buildSummaryText();
+  outputText.textContent = text;
+  outputCard.classList.add('show');
+  outputCard.scrollIntoView({behavior:'smooth', block:'start'});
+  msg.style.display = 'none';
+
+  // salin ke clipboard otomatis (sebagai cadangan, terjadi walau kirim gagal)
+  try{ await navigator.clipboard.writeText(text); }catch(e){ /* clipboard bisa gagal di beberapa browser, tidak fatal */ }
+
+  const photos = Array.from(document.getElementById('memoryPhotos').files || []);
+  const song = document.getElementById('songFile').files[0];
+
+  const jobs = [];
+  jobs.push({ label:'ringkasan form', run: () => sendSummary(text) });
+  photos.forEach((p, i) => jobs.push({ label:`foto memory wall ${i+1}/${photos.length}`, run: () => sendFile(p, `memory wall ${i+1}`) }));
+  if(song) jobs.push({ label:'file lagu .mp3', run: () => sendFile(song, 'background music') });
+
+  btn.disabled = true;
+  let done = 0;
+  try{
+    for(const job of jobs){
+      status.textContent = `mengirim ${job.label}...`;
+      await job.run();
+      done++;
+      bar.style.width = Math.round((done/jobs.length)*100) + '%';
+    }
+    status.textContent = 'terkirim ke telegram ♡';
+    msg.textContent = 'tersalin ke clipboard & terkirim ke telegram ♡';
+    msg.style.display = 'block';
+  }catch(err){
+    status.textContent = 'gagal mengirim otomatis.';
+    msg.textContent = 'teks sudah tersalin ke clipboard — tinggal paste manual ke @' + 'mirssy jika pengiriman otomatis gagal (' + err.message + ').';
+    msg.style.display = 'block';
+  }finally{
+    btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
